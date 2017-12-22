@@ -1,6 +1,6 @@
 # Vue Training Course Template
 
-A blank training course template framework built with vue.js [https://vuejs.org](https://vuejs.org) and using the Vuetify.js theme [https://vuetifyjs.com](https://vuetifyjs.com).
+A blank training course template framework built with vue.js ([https://vuejs.org](https://vuejs.org)) and using the Vuetify.js theme ([https://vuetifyjs.com](https://vuetifyjs.com)).
 
 ## Build Setup
 
