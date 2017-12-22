@@ -103,8 +103,6 @@ export default {
     return {
       drawer: null,
 
-      totalLessons: 0,
-      completedLessons: 0,
       percentageCompleted: 0,
 
       currentLesson: 'lesson-1',
@@ -304,6 +302,7 @@ export default {
           }
         }
       }
+      this.calculateCompletedPercentage()
     },
 
     completeLesson: function (lessonID) {
@@ -313,10 +312,26 @@ export default {
           if (lessonID === this.courseContentList[index].lessons[subIndex].lessonID) {
             this.courseContentList[index].lessons[subIndex].lessonComplete = true
             this.loadContent(this.courseContentList[index].lessons[subIndex].nextLesson)
+            this.calculateCompletedPercentage()
             break
           }
         }
       }
+    },
+
+    calculateCompletedPercentage: function () {
+      // Let's loop through and calculate the completed percentage
+      let totalLessons = 0
+      let completedLessons = 0
+      for (let index = 0; index < this.courseContentList.length; index++) {
+        for (let subIndex = 0; subIndex < this.courseContentList[index].lessons.length; subIndex++) {
+          if (this.courseContentList[index].lessons[subIndex].lessonComplete === true) {
+            completedLessons++
+          }
+          totalLessons++
+        }
+      }
+      this.percentageCompleted = Math.round((completedLessons / totalLessons) * 100)
     }
 
   }
