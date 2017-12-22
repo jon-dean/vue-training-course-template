@@ -2,6 +2,8 @@
 
 A blank training course template framework built with vue.js ([https://vuejs.org](https://vuejs.org)) and using the Vuetify.js theme ([https://vuetifyjs.com](https://vuetifyjs.com)).
 
+To see the training course template in action head on over to [this demo site](https://jon-dean.github.io/vue-training-course-template/).
+
 ## Build Setup
 
 ``` bash
