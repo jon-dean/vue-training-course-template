@@ -71,9 +71,28 @@
               <div v-if="activeLesson.lessonType=='audio'">
                 <v-card-media class="cardMediaFormatting theme--dark indigo">
                   <div class="audioFormatting">
-                    <audio controls>
+                    <audio id="audioPlayer" :oncanplay="audioLoaded()" ref="audioPlayer" @timeupdate="onAudioTimeUpdate" @ended="resetAudioPlayer">
                       <source :src="activeLesson.contentURL" type="audio/mpeg">
                     </audio>
+
+                      <div id="playPauseButton">
+                        <v-btn color="error" fab large dark @click="audioPlayPause()">
+                          <v-icon v-if="audioPlaying">pause</v-icon>
+                          <v-icon v-else>play_arrow</v-icon>
+                        </v-btn>
+                      </div>
+
+                      <div id="leftSideTime" class="white--text">{{ elapsedTime }}</div>
+
+                      <div id="scrubBar">
+                        <v-slider v-model="scrubBar" @input="changeCurrentTrackTime()" step="0" min="0" :max="scrubBarMax" color="red"></v-slider>
+                      </div>
+
+                      <div id="rightSideTime">
+                        <div v-if="startedAudioPlayback" class="white--text">-{{ remainingTime }}</div>
+                        <div v-else class="white--text">-{{ trackLength }}</div>
+                      </div>
+
                   </div>
                 </v-card-media>
               </div>
@@ -102,6 +121,15 @@ export default {
   data () {
     return {
       drawer: null,
+
+      audioPlayer: [],
+      audioPlaying: false,
+      elapsedTime: 0,
+      remainingTime: 0,
+      trackLength: 0,
+      startedAudioPlayback: false,
+      scrubBar: 0,
+      scrubBarMax: 0,
 
       percentageCompleted: 0,
 
@@ -272,7 +300,17 @@ export default {
   },
 
   created () {
+    // Load the right content on page creation
     this.loadContent(this.currentLesson)
+  },
+
+  updated () {
+    // Let's check to see if we have an audio player
+    let audioPlayer = document.getElementById('audioPlayer')
+    if (audioPlayer) {
+      // Set the player so we can override the controls
+      this.audioPlayer = audioPlayer
+    }
   },
 
   methods: {
@@ -303,6 +341,9 @@ export default {
         }
       }
       this.calculateCompletedPercentage()
+      if (this.audioPlayer) {
+        this.resetAudioPlayer()
+      }
     },
 
     completeLesson: function (lessonID) {
@@ -332,6 +373,69 @@ export default {
         }
       }
       this.percentageCompleted = Math.round((completedLessons / totalLessons) * 100)
+    },
+
+    audioLoaded: function () {
+      // Check to see if the audio player is fully loaded so we can properly access the track duration and other audio API elements
+      if (this.audioPlayer !== null) {
+        let retryFunction
+        if (!isNaN(this.audioPlayer.duration)) {
+          // We're OK so let's clear the timeout
+          clearTimeout(retryFunction)
+          this.trackLength = this.formatTrackTime(Math.floor(this.audioPlayer.duration))
+          this.elapsedTime = this.formatTrackTime(this.audioPlayer.currentTime)
+          this.scrubBarMax = this.audioPlayer.duration
+        } else {
+          // It's not fully loaded, let's retry in half a second
+          retryFunction = setTimeout(this.audioLoaded, 500)
+        }
+      }
+    },
+
+    audioPlayPause: function () {
+      // Let's check to see if we're already playing
+      if (this.audioPlayer.paused) {
+        // Start playing and switch the flag to show the pause button
+        this.audioPlayer.play()
+        this.audioPlaying = true
+
+        // Set the startedAudioPlayback flag to switch the remaining time counter
+        this.startedAudioPlayback = true
+      } else {
+        // Pause playing and switch the flag to show the play button
+        this.audioPlayer.pause()
+        this.audioPlaying = false
+      }
+    },
+
+    onAudioTimeUpdate: function () {
+      // Update the scrub bar with the elapsed time
+      this.scrubBar = this.audioPlayer.currentTime
+
+      // Update the elapsed and remaining times for the track
+      this.elapsedTime = this.formatTrackTime(this.audioPlayer.currentTime)
+      this.remainingTime = this.formatTrackTime(this.audioPlayer.duration - this.audioPlayer.currentTime)
+    },
+
+    changeCurrentTrackTime: function () {
+      // Change the track time when the user drags the slider bar
+      this.audioPlayer.currentTime = this.scrubBar
+    },
+
+    resetAudioPlayer: function () {
+      // Let's reset the values back to their defaults
+      this.elapsedTime = 0
+      this.remainingTime = 0
+      this.audioPlayer.currentTime = 0
+      this.startedAudioPlayback = false
+      this.audioPlaying = false
+    },
+
+    formatTrackTime: function (timeToFormat) {
+      let minutes = Math.floor((timeToFormat) / 60)
+      let seconds = Math.floor(timeToFormat % 60)
+      seconds = (seconds >= 10) ? seconds : '0' + seconds
+      return minutes + ':' + seconds
     }
 
   }
@@ -372,8 +476,32 @@ export default {
 
   .audioFormatting {
     width: 100%;
-    height: 200px;
+    height: 285px;
     padding: 75px;
     text-align: center;
   }
+
+  #leftSideTime, #scrubBar {
+    float: left;
+  }
+
+  #leftSideTime, #rightSideTime {
+    width: 5%;
+    padding-top: 22px;
+  }
+
+  #leftSideTime {
+    text-align: right;
+  }
+
+  #rightSideTime {
+    float: right;
+    text-align: left;
+  }
+
+  #scrubBar {
+    width: 90%;
+    padding: 0 10px 0 25px;
+  }
+
 </style>
