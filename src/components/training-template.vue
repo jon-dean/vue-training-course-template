@@ -48,62 +48,68 @@
         <v-layout row>
           <v-flex xs12 sm12 md12 lg12 xl12>
 
-            <v-card>
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="headline mb-0">{{ activeLesson.lessonTitle }}</h3>
-                  <div>{{ activeLesson.lessonDescription }}</div>
-                </div>
-              </v-card-title>
-              <v-card-actions class="floatRight">
-                <v-btn color="error" dark large class="elevation-0" @click="completeLesson(activeLesson.lessonID)">Complete And Go To Next Lesson</v-btn>
-              </v-card-actions>
-              <div class="clearfix"></div>
-
-              <div v-if="activeLesson.lessonType=='video'">
-                <v-card-media class="cardMediaFormatting">
-                  <video width="100%" height="100%" controls :poster="activeLesson.posterImage">
-                    <source :src="activeLesson.contentURL" type="video/mp4">
-                  </video>
-                </v-card-media>
-              </div>
-
-              <div v-if="activeLesson.lessonType=='audio'">
-                <v-card-media class="cardMediaFormatting theme--dark indigo">
-                  <div class="audioFormatting">
-                    <audio id="audioPlayer" :oncanplay="audioLoaded()" ref="audioPlayer" @timeupdate="onAudioTimeUpdate" @ended="resetAudioPlayer">
-                      <source :src="activeLesson.contentURL" type="audio/mpeg">
-                    </audio>
-
-                      <div id="playPauseButton">
-                        <v-btn color="error" fab large dark @click="audioPlayPause()">
-                          <v-icon v-if="audioPlaying">pause</v-icon>
-                          <v-icon v-else>play_arrow</v-icon>
-                        </v-btn>
-                      </div>
-
-                      <div id="leftSideTime" class="white--text">{{ elapsedTime }}</div>
-
-                      <div id="scrubBar">
-                        <v-slider v-model="scrubBar" @input="changeCurrentTrackTime()" step="0" min="0" :max="scrubBarMax" color="red"></v-slider>
-                      </div>
-
-                      <div id="rightSideTime">
-                        <div v-if="startedAudioPlayback" class="white--text">-{{ remainingTime }}</div>
-                        <div v-else class="white--text">-{{ trackLength }}</div>
-                      </div>
-
+            <div class="alignToTop">
+              <v-card>
+                <v-card-title primary-title>
+                  <div>
+                    <h3 class="headline mb-0">{{ activeLesson.lessonTitle }}</h3>
+                    <div>{{ activeLesson.lessonDescription }}</div>
                   </div>
-                </v-card-media>
-              </div>
+                </v-card-title>
+                <v-card-actions class="floatRight">
+                  <v-btn color="error" dark large class="elevation-0" @click="completeLesson(activeLesson.lessonID)">Complete And Go To Next Lesson</v-btn>
+                </v-card-actions>
+                <div class="clearfix"></div>
 
-              <div v-if="activeLesson.lessonType=='pdf'">
-                <v-card-media class="cardMediaFormatting">
-                  <vue-pdf-viewer height="950px" :url="activeLesson.contentURL"></vue-pdf-viewer>
-                </v-card-media>
-              </div>
+                <div v-if="activeLesson.lessonType=='video'">
+                  <v-card-media class="cardMediaFormatting">
+                    <video width="100%" height="100%" controls :poster="activeLesson.posterImage">
+                      <source :src="activeLesson.contentURL" type="video/mp4">
+                    </video>
+                  </v-card-media>
+                </div>
 
-            </v-card>
+                <div v-if="activeLesson.lessonType=='audio'">
+                  <v-card-media class="cardMediaFormatting theme--dark indigo">
+                    <div class="audioFormatting">
+                      <audio id="audioPlayer" :oncanplay="audioLoaded()" ref="audioPlayer" @timeupdate="onAudioTimeUpdate" @ended="resetAudioPlayer">
+                        <source :src="activeLesson.contentURL" type="audio/mpeg">
+                      </audio>
+
+                        <div id="playPauseButton">
+                          <v-btn color="error" fab large dark @click="audioPlayPause()">
+                            <v-icon v-if="audioPlaying">pause</v-icon>
+                            <v-icon v-else>play_arrow</v-icon>
+                          </v-btn>
+                        </div>
+
+                        <div id="leftSideTime" class="white--text">{{ elapsedTime }}</div>
+
+                        <div id="scrubBar">
+                          <v-slider v-model="scrubBar" @input="changeCurrentTrackTime()" step="0" min="0" :max="scrubBarMax" color="red"></v-slider>
+                        </div>
+
+                        <div id="rightSideTime">
+                          <div v-if="startedAudioPlayback" class="white--text">-{{ remainingTime }}</div>
+                          <div v-else class="white--text">-{{ trackLength }}</div>
+                        </div>
+
+                    </div>
+                  </v-card-media>
+                </div>
+
+                <div v-if="activeLesson.lessonType=='pdf'">
+                  <v-card-media class="cardMediaFormatting">
+                    <!-- Tablet / desktop screen PDF display -->
+                    <vue-pdf-viewer class="hidden-sm-and-down text-center" height="950px" :url="activeLesson.contentURL"></vue-pdf-viewer>
+
+                    <!-- Small screen PDF display -->
+                    <vue-pdf-viewer class="hidden-md-and-up text-center" height="500px" :url="activeLesson.contentURL"></vue-pdf-viewer>
+                  </v-card-media>
+                </div>
+
+              </v-card>
+            </div>
 
           </v-flex>
         </v-layout>
@@ -502,6 +508,11 @@ export default {
   #scrubBar {
     width: 90%;
     padding: 0 10px 0 25px;
+  }
+
+  .alignToTop {
+    height: 100vh !important;
+    align-self: flex-start;
   }
 
 </style>
