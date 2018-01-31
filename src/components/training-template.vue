@@ -57,7 +57,11 @@
                   </div>
                 </v-card-title>
                 <v-card-actions class="floatRight">
-                  <v-btn color="error" dark large class="elevation-0" @click="completeLesson(activeLesson.lessonID)">Complete And Go To Next Lesson</v-btn>
+                  <!-- Tablet / desktop screen large button display -->
+                  <v-btn color="error" dark large class="elevation-0 hidden-sm-and-down" @click="completeLesson(activeLesson.lessonID)">Complete And Go To Next Lesson</v-btn>
+
+                  <!-- Small screen small button display -->
+                  <v-btn color="error" dark small class="elevation-0 hidden-md-and-up" @click="completeLesson(activeLesson.lessonID)">Complete And Go To Next Lesson</v-btn>
                 </v-card-actions>
                 <div class="clearfix"></div>
 
