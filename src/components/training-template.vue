@@ -99,7 +99,7 @@
 
               <div v-if="activeLesson.lessonType=='pdf'">
                 <v-card-media class="cardMediaFormatting">
-                  <object :data="activeLesson.contentURL" type="application/pdf" width="100%" height="1200"></object>
+                  <vue-pdf-viewer height="950px" :url="activeLesson.contentURL"></vue-pdf-viewer>
                 </v-card-media>
               </div>
 
@@ -259,7 +259,7 @@ export default {
           lessonType: 'pdf',
           lessonTitle: 'Lesson #5 Title',
           lessonDescription: 'A short paragraph on what the person is going to learn in this lesson.',
-          contentURL: './static/demo.pdf',
+          contentURL: './static/demo3.pdf',
           posterImage: ''
         },
         {
@@ -283,7 +283,7 @@ export default {
           lessonType: 'pdf',
           lessonTitle: 'Lesson #8 Title',
           lessonDescription: 'A short paragraph on what the person is going to learn in this lesson.',
-          contentURL: './static/demo.pdf',
+          contentURL: './static/demo6.pdf',
           posterImage: ''
         },
         {
