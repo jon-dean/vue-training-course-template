@@ -46,7 +46,7 @@
     <v-content>
       <v-container fluid fill-height>
         <v-layout row>
-          <v-flex xs12 sm12 md12 lg12 xl12>
+          <v-flex xs11 sm11 md12 lg12 xl12>
 
             <div class="alignToTop">
               <v-card>
@@ -478,6 +478,11 @@ export default {
   .cardMediaFormatting {
     margin: 0 !important;
     padding: 0 !important;
+  }
+
+  .cardMediaFormatting p {
+    padding: 15px;
+    text-align: center;
   }
 
   .audioFormatting {
