@@ -108,7 +108,7 @@
                     <vue-pdf-viewer class="hidden-sm-and-down text-center" height="950px" :url="activeLesson.contentURL"></vue-pdf-viewer>
 
                     <!-- Small screen PDF display -->
-                    <vue-pdf-viewer class="hidden-md-and-up text-center" height="500px" :url="activeLesson.contentURL"></vue-pdf-viewer>
+                    <vue-pdf-viewer class="hidden-md-and-up text-center" height="400px" :url="activeLesson.contentURL"></vue-pdf-viewer>
                   </v-card-media>
                 </div>
 
